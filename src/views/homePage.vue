@@ -1,6 +1,6 @@
 <template>
   <c-box>
-    <c-button>
+    <c-button variant-color="green">
       Chakra Consumed! ⚡️
     </c-button>
     <el-button>
