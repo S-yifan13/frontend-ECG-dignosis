@@ -1,4 +1,4 @@
-# frontend_ebi_diagnosis
+# frontend_ecg_diagnosis
 
 ## Project setup
 ```
