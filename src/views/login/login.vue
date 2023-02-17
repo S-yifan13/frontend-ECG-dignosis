@@ -43,6 +43,8 @@
   .login {
     width: 100%;
     height: 100%;
+    margin-left:30px;
+    margin-right:30px;
     background: url("../../assets/images/sign-in-5.jpg") no-repeat;
     background-size: cover;
     overflow: hidden;
