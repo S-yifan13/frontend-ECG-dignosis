@@ -1,7 +1,7 @@
 <template>
     <div class="login">
       <div>
-        <img class="logo-name" src="../../assets/images/sign-in-logo.png" alt="logo" @click="handleToHome"/>
+        <img class="logo-name" src="frontend-ECG-dignosis\src\assets\images\sign-in-logo.png" alt="logo" @click="handleToHome"/>
       </div>
       <div class="login-wrap">
         <h1 class="title">登录</h1>
@@ -27,7 +27,62 @@
         </div>
       </div>
     </div>
-  </template>
+    <div class="register">
+    <div>
+      <img class="logo-name" src="frontend-ECG-dignosis\src\assets\images\sign-in-logo.png" alt="logo" @click="handleToHome"/>
+    </div>
+
+    <div class="register-wrap">
+      <h1 class="title">注册</h1>
+      <div class="form">
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
+          <el-form-item prop="username">
+            <el-input
+                placeholder="用户名"
+                type="username"
+                v-model="ruleForm.username"
+                autocomplete="off"
+                @keyup.enter.native="register('ruleForm')"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="email">
+            <el-input
+                placeholder="邮箱"
+                type="email"
+                v-model="ruleForm.email"
+                autocomplete="off"
+                @keyup.enter.native="register('ruleForm')"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="pass">
+            <el-input
+                placeholder="密码"
+                type="password"
+                v-model="ruleForm.pass"
+                autocomplete="off"
+                @keyup.enter.native="register('ruleForm')"
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="checkPass">
+            <el-input
+                placeholder="确认密码"
+                type="password"
+                v-model="ruleForm.checkPass"
+                autocomplete="off"
+                @keyup.enter.native="register('ruleForm')"
+            ></el-input>
+          </el-form-item>
+          <el-form-item class="register-btn">
+            <el-button type="primary" @click="register('ruleForm')">注 册</el-button>
+          </el-form-item>
+        </el-form>
+        <div class="login-text">
+          <p @click="handleCommand">已有账号？直接登录</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
   
   
   <style scoped>
@@ -41,7 +96,7 @@
   .login {
     width: 100%;
     height: 100%;
-    background: url("../../assets/images/sign-in-5.jpg") no-repeat;
+    background: url("frontend-ECG-dignosis\src\assets\images\sign-in-5.jpg") no-repeat;
     background-size: cover;
     overflow: hidden;
     position: fixed;
