@@ -11,9 +11,22 @@ const routes = [
   },
   {
     path: '/login',
-    name: 'loginPage',
-    component: () => import('../views/login/login')
-  }
+    name: 'SignIn',
+    component: () => import('../views/login/SignIn.vue'),
+    meta: {
+        requireNotAuth: true,
+        noNav: true
+    }
+},
+{
+    path: '/register',
+    name: 'SignUp',
+    component: () => import('../views/login/SignUp.vue'),
+    meta: {
+        requireNotAuth: true,
+        noNav: true
+    }
+},
 ]
 
 const router = new VueRouter({

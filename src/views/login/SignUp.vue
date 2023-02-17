@@ -104,7 +104,7 @@
   }
   </style>
   
-  <script>
+<script>
   export default {
     name: "register",
     data() {
