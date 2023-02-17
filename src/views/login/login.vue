@@ -32,19 +32,15 @@
   
   <style scoped>
   .logo-name {
-    /*margin-top: 30px;*/
-    margin-left:30px;
-    margin-right:30px;
-    width: 350px;
-    height: 175px;
-    cursor: pointer;
-    overflow: hidden;
+  margin-top: 30px;
+  width: 350px;
+  height: 175px;
+  cursor: pointer;
+  overflow: hidden;
   }
   .login {
     width: 100%;
     height: 100%;
-    margin-left:30px;
-    margin-right:30px;
     background: url("../../assets/images/sign-in-5.jpg") no-repeat;
     background-size: cover;
     overflow: hidden;
