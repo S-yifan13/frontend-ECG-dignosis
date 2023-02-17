@@ -32,7 +32,7 @@
   
   <style scoped>
   .logo-name {
-    margin-top: 30px;
+    /*margin-top: 30px;*/
     margin-left:30px;
     margin-right:30px;
     width: 350px;
