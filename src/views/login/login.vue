@@ -49,7 +49,7 @@
   .login-wrap {
     width: 350px;
     height: 330px;
-    padding: 20px 25px 20px 25px;
+    padding: 20px 25px 0 25px;
     line-height: 40px;
     position: relative;
     display: inline-block;
