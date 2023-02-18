@@ -68,6 +68,7 @@
   }
   .logo-name {
     margin-top: 30px;
+    margin-left:100px;
     width: 350px;
     height: 175px;
     cursor: pointer;
@@ -83,7 +84,7 @@
   .register {
     width: 100%;
     height: 100%;
-    background: url("../../assets/images/sign-in-5.jpg") no-repeat;
+    background: url("../../assets/images/sign-in-8.jpg") no-repeat;
     background-size: cover;
     overflow: hidden;
     position: fixed;
@@ -91,13 +92,19 @@
   .title{
     text-align: center;
     margin-bottom: 25px;
+    color:cornflowerblue;
   }
   .register-wrap {
+    right: 0;
+    left:0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
     width: 350px;
     height: 440px;
     padding: 20px 25px 0 25px;
     line-height: 40px;
-    position: relative;
+    position: fixed;
     display: inline-block;
     background-color: rgb(255, 255, 255, 0.85);
     border-radius: 20px;

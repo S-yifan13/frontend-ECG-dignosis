@@ -25,6 +25,9 @@
       <div class="register-text">
         <p @click="handleCommand">注册帐号</p>
       </div>
+      <!--<div class="forget_password">
+        <p @click="handleFind">忘记密码</p>
+      </div>-->
     </div>
   </div>
 </template>
@@ -33,7 +36,7 @@
 <style scoped>
 .logo-name {
   margin-top: 30px;
-  margin-left:500px;
+  margin-left:100px;
   width: 350px;
   height: 175px;
   cursor: pointer;
@@ -48,12 +51,16 @@
   position: fixed;
 }
 .login-wrap {
-  margin-left: 500px;
+  right: 0;
+  left:0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
   width: 350px;
   height: 350px;
   padding: 20px 25px 0 25px;
   line-height: 40px;
-  position: relative;
+  position: fixed;
   display: inline-block;
   background-color: rgb(255, 255, 255, 0.85);
   border-radius: 20px;
@@ -88,6 +95,13 @@ a:hover {
   color:#999;
   cursor: pointer;
   float:right;
+}
+.forget_password {
+  font-size:15px;
+  line-height:10px;
+  color:darkblue;
+  cursor: pointer;
+  float:left;
 }
 .title{
   text-align: center;

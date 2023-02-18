@@ -1,31 +1,27 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Home from "../views/homePage"
+import SignIn from "../views/login/SignIn.vue"
+import SignUp from "../views/login/SignUp.vue"
 
 Vue.use(VueRouter)
+
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: () => import('../views/homePage')
+    name: 'Home',
+    component: Home
   },
   {
     path: '/login',
     name: 'SignIn',
-    component: () => import('../views/login/SignIn.vue'),
-    meta: {
-        requireNotAuth: true,
-        noNav: true
-    }
+    component:SignIn
 },
 {
     path: '/register',
     name: 'SignUp',
-    component: () => import('../views/login/SignUp.vue'),
-    meta: {
-        requireNotAuth: true,
-        noNav: true
-    }
+    component:SignUp
 },
 ]
 
