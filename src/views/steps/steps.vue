@@ -18,12 +18,16 @@
               element-loading-text="AI辅助诊断中"
               align-center
               drag
-              action="https://jsonplaceholder.typicode.com/posts/"
+              :file-list="fileList"
+              :action=uploadImgUrl
+              :http-request="upLoadImage"
+              :before-upload="beforeImageUpload"
               multiple>
               <i class="el-icon-upload"></i>
               <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
               <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过20Mb</div>
             </el-upload>
+
           </div>
           <el-button class="btn" type="primary" plain round @click="addStep">下一步</el-button>
 <!--          <el-button type="primary" plain round @click="addStep" v-show="stepNow === 0">下一步</el-button>-->
@@ -71,14 +75,16 @@ export default {
   components: {TopGuide},
   data() {
     return {
-      stepNow: 3,
+      stepNow: 0,
       imageUrl: '',
+      uploadImgUrl: 'http://localhost:8000/api/rs/image/upload',
       url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       srcList: [
         'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
         'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
       ],
       doctorResult: '',
+      fileList:[],
     };
   },
   methods: {
@@ -92,7 +98,42 @@ export default {
       if (this.stepNow === 1) {
         this.decStep()
       }
-    }
+    },
+    beforeImageUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isPNG = file.type === 'image/png';
+      const isLt5M = file.size / 1024 / 1024 < 10;
+      if (!isJPG && !isPNG) {
+        this.$message.error('上传文件只能是 JPG/PNG 格式!');
+      } else if (!isLt5M) {
+        this.$message.error('上传图片大小不能超过 5MB!');
+      }
+      return (isJPG || isPNG) && isLt5M;
+    },
+    upLoadImage(file) {
+      const formData = new FormData();
+      formData.append('image', file.file);
+      this.$axios({
+        method: 'post',
+        url: this.uploadImgUrl,
+        data: formData,
+      }).then(res => {
+        console.log(res.data)
+          switch (res.data.errno) {
+            case 0:
+              var url = res.data.url;
+              if(this.picture == '')
+              this.picture = url;
+              else
+              this.picture = this.picture+ "," + url;
+              break;
+            default:
+              this.$message.error("操作失败！");
+              break;
+          }
+        })
+
+    },
   }
 }
 </script>
