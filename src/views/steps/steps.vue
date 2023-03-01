@@ -29,7 +29,7 @@
             </el-upload>
 
           </div>
-          <el-button class="btn" type="primary" plain round @click="addStep">下一步</el-button>
+          <el-button class="btn" type="primary" plain round @click="addStep();getAIResult()">下一步</el-button>
 <!--          <el-button type="primary" plain round @click="addStep" v-show="stepNow === 0">下一步</el-button>-->
         </div>
         <div class="step3" v-show="this.stepNow === 2">
@@ -77,7 +77,7 @@ export default {
     return {
       stepNow: 0,
       imageUrl: '',
-      uploadImgUrl: 'http://localhost:8000/api/rs/image/upload',
+      uploadImgUrl: 'http://127.0.0.1:8000/api/rs/image/upload',
       url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       srcList: [
         'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
@@ -85,6 +85,7 @@ export default {
       ],
       doctorResult: '',
       fileList:[],
+      picture:''
     };
   },
   methods: {
@@ -134,6 +135,9 @@ export default {
         })
 
     },
+    getAIResult(){
+
+    }
   }
 }
 </script>
