@@ -44,7 +44,7 @@
               </div>
             </el-aside>
             <el-main>
-              <p style="margin: 2vh 0;">AI辅助诊断结果为：</p>
+              <p style="margin: 2vh 0;">AI辅助诊断结果为：{{ aiResult }}</p>
               <el-input
                 type="textarea"
                 :autosize="{ minRows: 15, maxRows: 15}"
@@ -53,13 +53,13 @@
               </el-input>
             </el-main>
           </el-container>
-          <el-button class="btn" type="primary" plain round @click="getFuLLResult">提交</el-button>
+          <el-button class="btn" type="primary" plain round @click="addStep">提交</el-button>
           <el-button class="btn" type="primary" plain round @click="decStep">上一步</el-button>
         </div>
         <div class="step4" v-show="this.stepNow === 3">
-          <p style="margin: 5vh 0;">AI辅助诊断结果为：</p>
+          <p style="margin: 5vh 0;">AI辅助诊断结果为：{{ aiResult }}</p>
           <p style="margin: 5vh 0;"><span>医生诊断结论：</span></p>
-          <el-button class="btn" type="primary" plain round>完成</el-button>
+          <el-button class="btn" type="primary" plain round @click="done">完成</el-button>
           <el-button class="btn" type="primary" plain round @click="decStep">上一步</el-button>
         </div>
       </el-main>
@@ -77,7 +77,7 @@ export default {
     return {
       stepNow: 0,
       imageUrl: '',
-      uploadImgUrl: 'http://localhost:8000/api/rs/image/upload',
+      uploadImgUrl: 'http://127.0.0.1:8000/api/rs/image/upload',
       url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       srcList: [
         'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
@@ -85,22 +85,42 @@ export default {
       ],
       doctorResult: '',
       fileList:[],
+      picture:'',
+      rid:'',
+      aiResult:'',
     };
   },
   methods: {
+    done(){
+      this.stepNow = 0;
+    },
     getFuLLResult(){
       this.$axios({
         method: 'get',
-        url: 'http://127.0.0.1:8000/diagnosis/fullResult'
+        url: 'http://127.0.0.1:8000/diagnosis/fullResult',
+        params: {
+          rid: this.rid
+        }
       }).then(res=>{
         console.log(res);
-        this.stepNow ++;
       })
     },
     addStep() {
-      this.stepNow ++;
-      console.log(this.stepNow)
-      
+      if(this.stepNow == 0){
+        if(this.picture == '')
+          this.$message.warning('请上传图片');
+        else{
+          this.stepNow++;
+          this.getAIResult();
+        }
+          
+      }
+      else if(this.stepNow == 2){
+        this.submitDoctorResult();
+      }
+      else if(this.stepNow == 3){
+        this.getFuLLResult()
+      }
     },
     decStep() {
       this.stepNow --;
@@ -131,6 +151,7 @@ export default {
         console.log(res.data)
           switch (res.data.errno) {
             case 0:
+              this.$message.success("上传成功！");
               var url = res.data.url;
               if(this.picture == '')
               this.picture = url;
@@ -144,6 +165,38 @@ export default {
         })
 
     },
+    getAIResult(){
+      const formData = new FormData();
+      formData.append('imgURL', this.picture);
+      this.$axios({
+        method: 'post',
+        url: "http://127.0.0.1:8000/diagnosis/aiResult",
+        data: formData,
+      }).then(res => {
+        console.log(res.data)
+        if(res.data.errno == 0){
+          this.rid = res.data.data.rid
+          this.aiResult = res.data.data.result
+          this.stepNow++;
+        }
+      })
+    },
+    submitDoctorResult(){
+      const formData = new FormData();
+      formData.append('rid', this.rid);
+      formData.append('rConclusion', this.doctorResult);
+      this.$axios({
+        method: 'post',
+        url: "http://127.0.0.1:8000/diagnosis/manual",
+        data: formData,
+      }).then(res => {
+        console.log(res.data)
+        if(res.data.errno == 0){
+          this.stepNow++;
+          this.addStep();
+        }
+      })
+    }
   }
 }
 </script>
