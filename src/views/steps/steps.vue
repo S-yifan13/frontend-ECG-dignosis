@@ -163,7 +163,7 @@ export default {
             case 0:
               this.$message.success("上传成功！");
               var url = res.data.url;
-              this.srcList.push('http://127.0.0.1:8000'+url)
+              this.srcList.push(url)
               this.url=this.srcList[0]
               if(this.picture == '')
                 this.picture = url;
