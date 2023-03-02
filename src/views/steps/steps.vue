@@ -53,7 +53,7 @@
               </el-input>
             </el-main>
           </el-container>
-          <el-button class="btn" type="primary" plain round @click="addStep">提交</el-button>
+          <el-button class="btn" type="primary" plain round @click="getFuLLResult">提交</el-button>
           <el-button class="btn" type="primary" plain round @click="decStep">上一步</el-button>
         </div>
         <div class="step4" v-show="this.stepNow === 3">
@@ -88,9 +88,19 @@ export default {
     };
   },
   methods: {
+    getFuLLResult(){
+      this.$axios({
+        method: 'get',
+        url: 'http://127.0.0.1:8000/diagnosis/fullResult'
+      }).then(res=>{
+        console.log(res);
+        this.stepNow ++;
+      })
+    },
     addStep() {
       this.stepNow ++;
       console.log(this.stepNow)
+      
     },
     decStep() {
       this.stepNow --;
