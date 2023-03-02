@@ -58,7 +58,7 @@
         </div>
         <div class="step4" v-show="this.stepNow === 3">
           <p style="margin: 5vh 0;">AI辅助诊断结果为：{{ aiResult }}</p>
-          <p style="margin: 5vh 0;"><span>医生诊断结论：</span></p>
+          <p style="margin: 5vh 0;"><span>医生诊断结论：{{ conclusion }}</span></p>
           <el-button class="btn" type="primary" plain round @click="done">完成</el-button>
           <el-button class="btn" type="primary" plain round @click="decStep">上一步</el-button>
         </div>
@@ -76,23 +76,28 @@ export default {
   data() {
     return {
       stepNow: 0,
-      imageUrl: '',
       uploadImgUrl: 'http://127.0.0.1:8000/api/rs/image/upload',
-      url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-      srcList: [
-        'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-        'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
-      ],
+      url: '',
+      srcList: [],
       doctorResult: '',
       fileList:[],
       picture:'',
       rid:'',
       aiResult:'',
+      conclusion:'',
     };
   },
   methods: {
     done(){
       this.stepNow = 0;
+      this.rid = '';
+      this.aiResult = '';
+      this.url = '';
+      this.srcList = [];
+      this.doctorResult = '',
+      this.fileList = [],
+      this.picture = '',
+      this.conclusion = ''
     },
     getFuLLResult(){
       this.$axios({
@@ -103,6 +108,11 @@ export default {
         }
       }).then(res=>{
         console.log(res);
+        if(res.data.errno == 0){
+          this.aiResult = res.data.data.rAiResult;
+          this.conclusion = res.data.data.rConclusion;
+        }
+
       })
     },
     addStep() {
@@ -153,10 +163,12 @@ export default {
             case 0:
               this.$message.success("上传成功！");
               var url = res.data.url;
+              this.srcList.push('http://127.0.0.1:8000'+url)
+              this.url=this.srcList[0]
               if(this.picture == '')
-              this.picture = url;
+                this.picture = url;
               else
-              this.picture = this.picture+ "," + url;
+                this.picture = this.picture+ "," + url;
               break;
             default:
               this.$message.error("操作失败！");
