@@ -63,6 +63,7 @@
   position: fixed;
   display: inline-block;
   background-color: rgb(255, 255, 255, 0.85);
+  opacity: 0.6;
   border-radius: 20px;
 }
 h3 {
