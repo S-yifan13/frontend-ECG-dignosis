@@ -1,7 +1,7 @@
 <template>
   <div class="bg">
     <el-container>
-      <el-header style="background-color: green; height: 10vh">
+      <el-header style="background-color:	#4169E1; height: 10vh">
         <top-guide />
       </el-header>
       <el-main class="main">
@@ -9,7 +9,7 @@
           <el-step title="上传心电图" icon="el-icon-upload"></el-step>
           <el-step title="AI辅助诊断" icon="el-icon-upload"></el-step>
           <el-step title="人工诊断" icon="el-icon-picture"></el-step>
-          <el-step title="完成" icon="el-icon-picture"></el-step>
+          <el-step title="诊断结论" icon="el-icon-picture"></el-step>
         </el-steps>
         <div class="step1" v-show="stepNow === 0 || stepNow === 1">
           <div class="upload">
@@ -57,8 +57,19 @@
           <el-button class="btn" type="primary" plain round @click="decStep">上一步</el-button>
         </div>
         <div class="step4" v-show="this.stepNow === 3">
-          <p style="margin: 5vh 0;">AI辅助诊断结果为：{{ aiResult }}</p>
-          <p style="margin: 5vh 0;"><span>医生诊断结论：{{ conclusion }}</span></p>
+          <el-row style="margin-top:60px">
+            <el-col span="12">
+              <el-image
+                style="width: 400px; height: 300px; margin-left: 100px"
+                :src="url"
+                :preview-src-list="srcList">
+              </el-image>
+            </el-col>
+            <el-col span="12">
+              <p style="margin: 5vh 0;">AI辅助诊断结果为：{{ aiResult }}</p>
+              <p style="margin: 5vh 0;"><span>医生诊断结论：{{ conclusion }}</span></p>
+            </el-col>
+          </el-row>
           <el-button class="btn" type="primary" plain round @click="done">完成</el-button>
           <el-button class="btn" type="primary" plain round @click="decStep">上一步</el-button>
         </div>
@@ -75,7 +86,7 @@ export default {
   components: {TopGuide},
   data() {
     return {
-      stepNow: 0,
+      stepNow: 3,
       uploadImgUrl: 'http://127.0.0.1:8000/api/rs/image/upload',
       url: '',
       srcList: [],
@@ -204,6 +215,7 @@ export default {
       }).then(res => {
         console.log(res.data)
         if(res.data.errno == 0){
+          this.$message.success("上传成功！");
           this.stepNow++;
           this.addStep();
         }
