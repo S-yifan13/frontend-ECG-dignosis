@@ -44,7 +44,7 @@
               </div>
             </el-aside>
             <el-main>
-              <p style="margin: 2vh 0;">AI辅助诊断结果为：{{ aiResult }}</p>
+              <p style="margin: 2vh 0;">AI辅助诊断结果：{{ aiResult }}</p>
               <el-input
                 type="textarea"
                 :autosize="{ minRows: 15, maxRows: 15}"
@@ -58,15 +58,15 @@
         </div>
         <div class="step4" v-show="this.stepNow === 3">
           <el-row style="margin-top:60px">
-            <el-col span="12">
+            <el-col :span=12>
               <el-image
                 style="width: 400px; height: 300px; margin-left: 100px"
                 :src="url"
                 :preview-src-list="srcList">
               </el-image>
             </el-col>
-            <el-col span="12">
-              <p style="margin: 5vh 0;">AI辅助诊断结果为：{{ aiResult }}</p>
+            <el-col :span=12>
+              <p style="margin: 5vh 0;">AI辅助诊断结果：{{ aiResult }}</p>
               <p style="margin: 5vh 0;"><span>医生诊断结论：{{ conclusion }}</span></p>
             </el-col>
           </el-row>
@@ -86,7 +86,7 @@ export default {
   components: {TopGuide},
   data() {
     return {
-      stepNow: 3,
+      stepNow: 0,
       uploadImgUrl: 'http://127.0.0.1:8000/api/rs/image/upload',
       url: '',
       srcList: [],
@@ -174,8 +174,6 @@ export default {
             case 0:
               this.$message.success("上传成功！");
               var url = res.data.url;
-              this.srcList.push(url)
-              this.url=this.srcList[0]
               if(this.picture == '')
                 this.picture = url;
               else
@@ -200,6 +198,8 @@ export default {
         if(res.data.errno == 0){
           this.rid = res.data.data.rid
           this.aiResult = res.data.data.result
+          this.srcList = res.data.data.rEcg
+          this.url=this.srcList[0]
           this.stepNow++;
         }
       })
