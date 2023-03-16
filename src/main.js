@@ -6,7 +6,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import axios from "axios";
 import Chakra, { CThemeProvider } from '@chakra-ui/vue'
-// axios.defaults.baseURL = "http://43.138.82.70/api"
+axios.defaults.baseURL = "http://127.0.0.1:8000"
 Vue.prototype.$axios = axios;
 Vue.use(ElementUI);
 Vue.use(Chakra)
