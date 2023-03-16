@@ -16,6 +16,10 @@ const routes = [
     path: '/',
     name: 'stepsPage',
     component: () => import('../views/steps/steps')
+  },{
+    path: '/popularization',
+    name: 'sciencePopularization',
+    component: () => import('../views/sciencePopularization')
   },
   {
     path: '/login',
