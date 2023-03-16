@@ -12,7 +12,10 @@
           <el-step title="诊断结论" icon="el-icon-picture"></el-step>
         </el-steps>
         <div class="step1" v-show="stepNow === 0 || stepNow === 1">
-          <div class="upload">
+          <c-box mt="50px">
+            <el-row>
+            <el-col :span="12">
+            <c-box ml="10">
             <el-upload
               v-loading="stepNow===1"
               element-loading-text="AI辅助诊断中"
@@ -22,13 +25,28 @@
               :action=uploadImgUrl
               :http-request="upLoadImage"
               :before-upload="beforeImageUpload"
+              list-type="picture"
               multiple>
               <i class="el-icon-upload"></i>
+              <div slot="file" slot-scope="{file}">
+                  <el-image :src="file.url" :preview-src-list="[file.url]" fit="scale-down">
+                  </el-image>
+              </div>
               <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
               <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过20Mb</div>
             </el-upload>
+          </c-box>
+            <el-dialog :visible.sync="dialogVisible">
+              <img width="100%" :src="dialogImageUrl" alt="">
+            </el-dialog>
+            </el-col>
+            <el-col :span="12">
+                <el-input>
 
-          </div>
+                </el-input>
+            </el-col>
+            </el-row>
+          </c-box>
           <el-button class="btn" type="primary" plain round @click="addStep">下一步</el-button>
 <!--          <el-button type="primary" plain round @click="addStep" v-show="stepNow === 0">下一步</el-button>-->
         </div>
@@ -81,13 +99,15 @@
 
 <script>
 import TopGuide from "@/components/topGuide";
+import { CBox } from '@chakra-ui/vue';
 export default {
   name: "steps",
-  components: {TopGuide},
+  components: {TopGuide,
+  CBox},
   data() {
     return {
       stepNow: 0,
-      uploadImgUrl: 'http://127.0.0.1:8000/api/rs/image/upload',
+      uploadImgUrl: '/api/rs/image/upload',
       url: '',
       srcList: [],
       doctorResult: '',
@@ -96,9 +116,18 @@ export default {
       rid:'',
       aiResult:'',
       conclusion:'',
+      dialogVisible: false,
+      dialogImageUrl: '',
     };
   },
   methods: {
+    handleRemove(file) {
+      this.picture = ''
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
     done(){
       this.stepNow = 0;
       this.rid = '';
@@ -113,7 +142,7 @@ export default {
     getFuLLResult(){
       this.$axios({
         method: 'get',
-        url: 'http://127.0.0.1:8000/diagnosis/fullResult',
+        url: '/diagnosis/fullResult',
         params: {
           rid: this.rid
         }
@@ -191,7 +220,7 @@ export default {
       formData.append('imgURL', this.picture);
       this.$axios({
         method: 'post',
-        url: "http://127.0.0.1:8000/diagnosis/aiResult",
+        url: "/diagnosis/aiResult",
         data: formData,
       }).then(res => {
         console.log(res.data)
@@ -210,7 +239,7 @@ export default {
       formData.append('rConclusion', this.doctorResult);
       this.$axios({
         method: 'post',
-        url: "http://127.0.0.1:8000/diagnosis/manual",
+        url: "/diagnosis/manual",
         data: formData,
       }).then(res => {
         console.log(res.data)
@@ -234,15 +263,19 @@ export default {
   width: 100%;
   height: 100%;
 }
-.upload {
-  width: fit-content;
-  margin: 15vh auto 0 auto;
-}
 .btn {
   float: right;
   margin: 5vh 2vw 0 0;
 }
 .image-preview {
   margin: 5vh;
+}
+</style>
+
+<style>
+li.el-upload-list__item{
+  height: 200px !important;
+  width: 350px !important;
+  padding: 10px 10px 10px 10px;
 }
 </style>
