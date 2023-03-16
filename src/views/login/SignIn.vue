@@ -1,8 +1,5 @@
 <template>
   <div class="login">
-    <div>
-      <img class="logo-name" src="../../assets/images/sign-in-logo.png" alt="logo" @click="handleToHome"/>
-    </div>
     <div class="login-wrap">
       <h1 class="title">登录</h1>
       <el-form :model="form" ref="form" class="demo-ruleForm">
@@ -45,7 +42,7 @@
 .login {
   width: 100%;
   height: 100%;
-  background: url("../../assets/images/sign-in-8.jpg") no-repeat;
+  background: url("../../assets/images/bg.jpg") no-repeat;
   background-size: cover;
   overflow: hidden;
   position: fixed;
@@ -62,8 +59,7 @@
   line-height: 40px;
   position: fixed;
   display: inline-block;
-  background-color: rgb(255, 255, 255, 0.85);
-  opacity: 0.6;
+  background-color: rgb(255, 255, 255);
   border-radius: 20px;
 }
 h3 {
@@ -129,59 +125,60 @@ export default {
       const formData = new FormData();
       formData.append("username", self.form.username);
       formData.append("password", self.form.password);
+      this.$router.push('/')
 
-      self.$axios({
-        method: 'post',
-        url: '/user/login',
-        data: formData,
-      })
-      .then(res => {
-        switch (res.data.status_code) {
-          case 1:
-            // location.reload();
-            // 前端保存用户信息
-              this.$message.success("登录成功");
-            this.$store.dispatch('saveUserInfo', {user: {
-              'username': this.form.username,
-              'confirmed': true,
-            }});
-            var curr = localStorage.getItem('preRoute');
-            if (curr == null) {
-              this.$router.push('/index');
-            } else {
-              this.$router.push({ path: curr });
-            }
-            break;
-          case -1:
-            this.$message.error('请检查填写的内容！');
-            break;
-          case 2:
-            this.$message.warning('用户已登录！');
-            break;
-          case 3:
-            this.$message.error('用户名不存在！');
-            break;
-          case 4:
-            this.$message.error('用户名或密码错误！');
-            break;
-          case 5:
-            this.$message.warning('用户未通过邮件确认，请及时确认！');
-            this.$store.dispatch('saveUserInfo', {user: {
-              'username': this.form.username,
-              'confirmed': false,
-            }});
-            var cur = localStorage.getItem('preRoute');
-            if (cur == null) {
-              this.$router.push('/unverified_email');
-            } else {
-              this.$router.push({ path: cur });
-            }
-            break;
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      })
+      // self.$axios({
+      //   method: 'post',
+      //   url: '/user/login',
+      //   data: formData,
+      // })
+      // .then(res => {
+      //   switch (res.data.status_code) {
+      //     case 1:
+      //       // location.reload();
+      //       // 前端保存用户信息
+      //         this.$message.success("登录成功");
+      //       this.$store.dispatch('saveUserInfo', {user: {
+      //         'username': this.form.username,
+      //         'confirmed': true,
+      //       }});
+      //       var curr = localStorage.getItem('preRoute');
+      //       if (curr == null) {
+      //         this.$router.push('/index');
+      //       } else {
+      //         this.$router.push({ path: curr });
+      //       }
+      //       break;
+      //     case -1:
+      //       this.$message.error('请检查填写的内容！');
+      //       break;
+      //     case 2:
+      //       this.$message.warning('用户已登录！');
+      //       break;
+      //     case 3:
+      //       this.$message.error('用户名不存在！');
+      //       break;
+      //     case 4:
+      //       this.$message.error('用户名或密码错误！');
+      //       break;
+      //     case 5:
+      //       this.$message.warning('用户未通过邮件确认，请及时确认！');
+      //       this.$store.dispatch('saveUserInfo', {user: {
+      //         'username': this.form.username,
+      //         'confirmed': false,
+      //       }});
+      //       var cur = localStorage.getItem('preRoute');
+      //       if (cur == null) {
+      //         this.$router.push('/unverified_email');
+      //       } else {
+      //         this.$router.push({ path: cur });
+      //       }
+      //       break;
+      //   }
+      // })
+      // .catch(err => {
+      //   console.log(err);
+      // })
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();

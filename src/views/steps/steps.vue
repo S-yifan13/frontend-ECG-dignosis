@@ -15,7 +15,7 @@
           <c-box mt="50px">
             <el-row>
             <el-col :span="12">
-            <c-box ml="10">
+            <c-box ml="40">
             <el-upload
               v-loading="stepNow===1"
               element-loading-text="AI辅助诊断中"
@@ -36,14 +36,30 @@
               <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过20Mb</div>
             </el-upload>
           </c-box>
-            <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
             </el-col>
             <el-col :span="12">
-                <el-input>
-
-                </el-input>
+          <c-box>
+            <el-form ref="form" :model="ecgInfo" label-width="80px">
+              <el-form-item label="心室率">
+                <el-input-number v-model="ecgInfo.rBpm" style="width: 180px" size="mini"></el-input-number>&thinsp;bpm
+              </el-form-item>
+              <el-form-item label="PR间期">
+                <el-input-number v-model="ecgInfo.rPR" style="width: 180px" size="mini"></el-input-number>&thinsp;ms
+              </el-form-item>
+              <el-form-item label="QRS宽度">
+                <el-input-number v-model="ecgInfo.rQRS" style="width: 180px" size="mini"></el-input-number>&thinsp;ms
+              </el-form-item>
+              <el-form-item label="QT/QTc">
+                <el-input-number v-model="ecgInfo.rQT" style="width: 90px" size="mini"></el-input-number>&thinsp;/&thinsp;
+                <el-input-number v-model="ecgInfo.rQTc" style="width: 90px" size="mini"></el-input-number>&thinsp;ms
+              </el-form-item>
+              <el-form-item label="P-R-T轴">
+                <el-input-number v-model="ecgInfo.rP"  size="mini" controls-position="right"></el-input-number>&thinsp;
+                <el-input-number v-model="ecgInfo.rR" size="mini" controls-position="right"></el-input-number>&thinsp;
+                <el-input-number v-model="ecgInfo.rT" size="mini" controls-position="right"></el-input-number>
+              </el-form-item>
+            </el-form>
+          </c-box>
             </el-col>
             </el-row>
           </c-box>
@@ -63,12 +79,24 @@
             </el-aside>
             <el-main>
               <p style="margin: 2vh 0;">AI辅助诊断结果：{{ aiResult }}</p>
+              <c-box mt="5" >
+              <c-text>医生诊断结果</c-text>
               <el-input
                 type="textarea"
-                :autosize="{ minRows: 15, maxRows: 15}"
+                :autosize="{ minRows: 8, maxRows: 8}"
                 placeholder="请输入诊断结果"
                 v-model="doctorResult">
               </el-input>
+              </c-box>
+              <c-box mt="5">
+                <c-text>治疗建议</c-text>
+              <el-input
+                type="textarea"
+                :autosize="{ minRows: 8, maxRows: 8}"
+                placeholder="请输入治疗建议"
+                v-model="advice">
+              </el-input>
+              </c-box>
             </el-main>
           </el-container>
           <el-button class="btn" type="primary" plain round @click="addStep">提交</el-button>
@@ -84,8 +112,9 @@
               </el-image>
             </el-col>
             <el-col :span=12>
-              <p style="margin: 5vh 0;">AI辅助诊断结果：{{ aiResult }}</p>
-              <p style="margin: 5vh 0;"><span>医生诊断结论：{{ conclusion }}</span></p>
+              <p style="margin: 3vh 0;">AI辅助诊断结果：{{ aiResult }}</p>
+              <p style="margin: 3vh 0;"><span>医生诊断结论：{{ conclusion }}</span></p>
+              <p style="margin: 3vh 0;"><span>治疗建议：{{ advice }}</span></p>
             </el-col>
           </el-row>
           <el-button class="btn" type="primary" plain round @click="done">完成</el-button>
@@ -99,11 +128,14 @@
 
 <script>
 import TopGuide from "@/components/topGuide";
+import { CText } from '@chakra-ui/vue'
 import { CBox } from '@chakra-ui/vue';
 export default {
   name: "steps",
-  components: {TopGuide,
-  CBox},
+  components: {
+    TopGuide,
+    CText,
+    CBox},
   data() {
     return {
       stepNow: 0,
@@ -113,20 +145,27 @@ export default {
       doctorResult: '',
       fileList:[],
       picture:'',
+      advice: '',
       rid:'',
       aiResult:'',
       conclusion:'',
       dialogVisible: false,
       dialogImageUrl: '',
+      ecgInfo:{
+        rBpm: '',
+        rPR: '',
+        rQRS: '',
+        rQT: '',
+        rQTc: '',
+        rP: '',
+        rR: '',
+        rT: ''
+      }
     };
   },
   methods: {
     handleRemove(file) {
       this.picture = ''
-    },
-    handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url;
-      this.dialogVisible = true;
     },
     done(){
       this.stepNow = 0;
@@ -218,6 +257,9 @@ export default {
     getAIResult(){
       const formData = new FormData();
       formData.append('imgURL', this.picture);
+      for (let key in this.ecgInfo){
+        formData.append(key, this.ecgInfo[key])
+      }
       this.$axios({
         method: 'post',
         url: "/diagnosis/aiResult",
@@ -237,6 +279,7 @@ export default {
       const formData = new FormData();
       formData.append('rid', this.rid);
       formData.append('rConclusion', this.doctorResult);
+      formData.append('rAdvice', this.advice)
       this.$axios({
         method: 'post',
         url: "/diagnosis/manual",
@@ -276,6 +319,6 @@ export default {
 li.el-upload-list__item{
   height: 200px !important;
   width: 350px !important;
-  padding: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px !important;
 }
 </style>
