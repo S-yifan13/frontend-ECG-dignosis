@@ -1,7 +1,7 @@
 <template>
   <div class="bg">
     <el-container>
-      <el-header style="background-color:	#4169E1; height: 10vh">
+      <el-header>
         <top-guide />
       </el-header>
       <el-main class="main">
@@ -301,6 +301,10 @@ export default {
 .main {
   width: 100%;
   height: 100%;
+  padding-top: 60px;
+}
+.el-header{
+  padding: 0 !important;
 }
 .step1 {
   width: 100%;

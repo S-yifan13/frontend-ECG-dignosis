@@ -1,4 +1,6 @@
 <template>
+    <c-box>
+    <top-guide></top-guide>
     <c-box style="padding:100px">
         <c-box >
             <el-row >
@@ -6,7 +8,7 @@
                 <div class="image-container">
                     <el-image
                     style="width: 350px; "
-                    :src="require('@/assets/image/heart.png')"
+                    :src="require('@/assets/images/heart.png')"
                     class="bounce" ></el-image>
                 </div>
                 
@@ -53,7 +55,7 @@
                 <el-col :span="8">
                 <el-image
                 style="width: 350px; "
-                :src="require('@/assets/image/doctor.png')"></el-image>
+                :src="require('@/assets/images/doctor.png')"></el-image>
             </el-col>
             </el-row>
         </c-box>
@@ -62,7 +64,7 @@
                 <el-col :span="8">
                     <el-image
                     style="width: 350px; "
-                    :src="require('@/assets/image/doctor1.png')"></el-image>
+                    :src="require('@/assets/images/doctor1.png')"></el-image>
                 </el-col>
                 <el-col :span="16" >
                     <c-box >
@@ -105,7 +107,7 @@
                 <el-col :span="8">
                 <el-image
                 style="width: 350px; "
-                :src="require('@/assets/image/doctor2.png')"></el-image>
+                :src="require('@/assets/images/doctor2.png')"></el-image>
             </el-col>
             </el-row>
         </c-box>
@@ -124,7 +126,7 @@
             <el-col :span="12">
                 <el-image
                     style="width: 550px; "
-                    :src="require('@/assets/image/ecg.jpg')"></el-image>
+                    :src="require('@/assets/images/ecg.jpg')"></el-image>
             </el-col>
             <el-col :span="12">
                 <c-text>
@@ -150,17 +152,20 @@
             
         </c-box>
     </c-box>
+</c-box>
 </template>
 
 <script lang="js">
 import { CBox, CButton, CHeading, CText} from '@chakra-ui/vue'
+import topGuide from '@/components/topGuide.vue';
 export default {
   name: 'sciencePopularization',
   components: {
     CBox,
     CButton,
     CHeading,
-    CText
+    CText,
+    topGuide
   },
   data(){
     return{

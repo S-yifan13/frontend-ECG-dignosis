@@ -70,6 +70,9 @@ export default {
       }).then(res => {
         if(res.data.code == 0){
           this.$message.success("登录成功");
+          this.$store.state.id = res.data.data.id;
+          this.$store.state.name = res.data.data.name;
+          this.$store.state.type = res.data.data.type;
           setTimeout(() => {
             this.$router.push('/');
           }, 1000);
