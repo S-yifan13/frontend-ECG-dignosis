@@ -1,184 +1,83 @@
 <template>
   <div class="login">
     <div class="login-wrap">
-      <h1 class="title">登录</h1>
-      <el-form :model="form" ref="form" class="demo-ruleForm">
-        <el-form-item prop="username">
-          <el-input placeholder="用户名" type="username" v-model="form.username" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item id="password" prop="pass">
-          <el-input
-              placeholder="密 码"
-              type="password"
-              v-model="form.password"
-              autocomplete="off"
-              @keyup.enter.native="login"
-          ></el-input>
-        </el-form-item>
-        <el-form-item class="login-btn">
-          <el-button type="primary" @click="login">登 录</el-button>
-        </el-form-item>
-      </el-form>
-      <div class="register-text">
-        <p @click="handleCommand">注册帐号</p>
-      </div>
-      <!--<div class="forget_password">
-        <p @click="handleFind">忘记密码</p>
-      </div>-->
+      <el-row>
+        <el-col :span="12">
+          <img :src="require('../../assets/images/login.jpg')" class="loginImage">
+        </el-col>
+        <el-col :span="12">
+          <c-box mt="10px" ml="30px" mr="40px" mb="15px">
+          <el-form :model="form" ref="form" class="demo-ruleForm">
+            <el-form-item>
+              <el-radio-group v-model="form.type">
+                <el-radio label="patient">普通用户</el-radio>
+                <el-radio label="doctor">医生</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item prop="username">
+              <el-input placeholder="用户名" variant="flushed" v-model="form.username" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item id="password" prop="pass">
+              <el-input
+                  placeholder="密码"
+                  type="password"
+                  v-model="form.password"
+                  autocomplete="off"
+                  @keyup.enter.native="login"
+              ></el-input>
+            </el-form-item>
+            <el-form-item class="login-btn">
+              <el-button type="primary" @click="login">登 录</el-button>
+            </el-form-item>
+          </el-form>
+          <div class="register-text">
+            <span @click="handleCommand">注册帐号</span>
+          </div>
+        </c-box>
+        </el-col>
+      </el-row>
     </div>
   </div>
 </template>
 
-
-<style scoped>
-.logo-name {
-  margin-top: 30px;
-  margin-left:100px;
-  width: 350px;
-  height: 175px;
-  cursor: pointer;
-  overflow: hidden;
-}
-.login {
-  width: 100%;
-  height: 100%;
-  background: url("../../assets/images/bg.jpg") no-repeat;
-  background-size: cover;
-  overflow: hidden;
-  position: fixed;
-}
-.login-wrap {
-  right: 0;
-  left:0;
-	top: 0;
-	bottom: 0;
-	margin: auto;
-  width: 350px;
-  height: 350px;
-  padding: 20px 25px 0 25px;
-  line-height: 40px;
-  position: fixed;
-  display: inline-block;
-  background-color: rgb(255, 255, 255);
-  border-radius: 20px;
-}
-h3 {
-  color: #0babeab8;
-  font-size: 24px;
-}
-hr {
-  background-color: #444;
-  margin: 20px auto;
-}
-a {
-  text-decoration: none;
-  color: #aaa;
-  font-size: 15px;
-}
-a:hover {
-  color: coral;
-}
-.login-btn {
-  margin-top: 30px;
-  text-align: center;
-}
-.login-btn button{
-  width:100%;
-  height:40px;
-}
-.register-text {
-  font-size:15px;
-  line-height:10px;
-  color:#999;
-  cursor: pointer;
-  float:right;
-}
-.forget_password {
-  font-size:15px;
-  line-height:10px;
-  color:darkblue;
-  cursor: pointer;
-  float:left;
-}
-.title{
-  text-align: center;
-  margin-bottom: 25px;
-  color:cornflowerblue;
-}
-</style>
-
 <script>
+import { CText, CInput, CBox } from '@chakra-ui/vue'
 export default {
   name: "login",
+  components: {
+    CText, CInput, CBox
+  },
   data() {
     return {
       is_login: true,
       form: {
         username: '',
         password: '',
+        type: 'patient'
       },
     };
   },
   methods: {
     login() {
-      const self = this;
       const formData = new FormData();
-      formData.append("username", self.form.username);
-      formData.append("password", self.form.password);
-      this.$router.push('/')
-
-      // self.$axios({
-      //   method: 'post',
-      //   url: '/user/login',
-      //   data: formData,
-      // })
-      // .then(res => {
-      //   switch (res.data.status_code) {
-      //     case 1:
-      //       // location.reload();
-      //       // 前端保存用户信息
-      //         this.$message.success("登录成功");
-      //       this.$store.dispatch('saveUserInfo', {user: {
-      //         'username': this.form.username,
-      //         'confirmed': true,
-      //       }});
-      //       var curr = localStorage.getItem('preRoute');
-      //       if (curr == null) {
-      //         this.$router.push('/index');
-      //       } else {
-      //         this.$router.push({ path: curr });
-      //       }
-      //       break;
-      //     case -1:
-      //       this.$message.error('请检查填写的内容！');
-      //       break;
-      //     case 2:
-      //       this.$message.warning('用户已登录！');
-      //       break;
-      //     case 3:
-      //       this.$message.error('用户名不存在！');
-      //       break;
-      //     case 4:
-      //       this.$message.error('用户名或密码错误！');
-      //       break;
-      //     case 5:
-      //       this.$message.warning('用户未通过邮件确认，请及时确认！');
-      //       this.$store.dispatch('saveUserInfo', {user: {
-      //         'username': this.form.username,
-      //         'confirmed': false,
-      //       }});
-      //       var cur = localStorage.getItem('preRoute');
-      //       if (cur == null) {
-      //         this.$router.push('/unverified_email');
-      //       } else {
-      //         this.$router.push({ path: cur });
-      //       }
-      //       break;
-      //   }
-      // })
-      // .catch(err => {
-      //   console.log(err);
-      // })
+      formData.append("username", this.form.username);
+      formData.append("password", this.form.password);
+      formData.append("type", this.form.type);
+      this.$axios({
+        method: 'post',
+        url: '/login',
+        data: formData,
+      }).then(res => {
+        if(res.data.code == 0){
+          this.$message.success("登录成功");
+          setTimeout(() => {
+            this.$router.push('/');
+          }, 1000);
+        }
+        else{
+          this.$message.error(res.data.msg);
+        }
+      })
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -192,3 +91,50 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.loginImage {
+  width: 100%;
+  height: 300px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+.login {
+  width: 100%;
+  height: 100%;
+  background: url("../../assets/images/bg.jpg") no-repeat;
+  background-size: cover;
+  overflow: hidden;
+  position: fixed;
+}
+
+.login-wrap {
+	margin-top: 30vh;
+  margin-left: 30vw;
+  width: 650px;
+  height: 300px;
+  padding: 0 ;
+  background-color: rgba(255, 255, 255);
+  border-radius: 20px;
+  display: inline-block;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+}
+.login-btn {
+  margin-top: 25px;
+  text-align: center;
+}
+.login-btn button{
+  width:100%;
+  height:40px;
+}
+.register-text {
+  font-size:15px;
+  color:#999;
+  float:right;
+}
+.el-radio-group {
+  margin-bottom: -15px;
+  margin-left: 40px;
+}
+</style>
+
