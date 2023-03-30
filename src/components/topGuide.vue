@@ -74,7 +74,7 @@ export default {
 }
 #topGuide{
   height: 70px;
-  background-color: black;
+  background-color: rgb(0, 0, 0);
 }
 .guide{
   margin-top: 20px;
