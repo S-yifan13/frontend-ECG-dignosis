@@ -65,16 +65,20 @@ export default {
       formData.append("type", this.form.type);
       this.$axios({
         method: 'post',
-        url: '/login',
+        url: '/user/login',
         data: formData,
       }).then(res => {
-        if(res.data.code == 0){
+        console.log(res.data)
+        if(res.data.errno == 0){
           this.$message.success("登录成功");
-          this.$store.state.id = res.data.data.id;
-          this.$store.state.name = res.data.data.name;
-          this.$store.state.type = res.data.data.type;
+          this.$store.state.user.id = res.data.data.pid;
+          this.$store.state.user.name = this.form.username;
+          this.$store.state.user.type = res.data.data.type;
           setTimeout(() => {
-            this.$router.push('/');
+            if(this.form.type == "patient")
+            this.$router.push('/patient');
+            else
+            this.$router.push('/diagnose');
           }, 1000);
         }
         else{

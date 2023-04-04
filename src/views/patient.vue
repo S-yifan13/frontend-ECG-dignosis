@@ -23,13 +23,13 @@
             </el-menu-item>
         </el-menu>
     </el-aside>
-    <el-container>
-        <c-box v-if="activeMenuItem == '1'" style="padding:60px 100px">
+    <el-container >
+        <c-box v-if="activeMenuItem == '1'" style="padding:60px 100px" >
             <el-timeline>
                 <el-timeline-item timestamp="2018/4/12" placement="top">
                 <c-box boxShadow="0 0 10px rgba(0, 0, 0, 0.2)" rounded='md'
                     borderRadius='5px' border='1px' borderColor='gray.200' 
-                    padding="40px" width="1000px">
+                    padding="40px" width="1000px" >
                     <el-row>
                         <el-col :span="10">
                             <el-image
@@ -321,7 +321,27 @@
         password3:'',
       }
     },
-  }
+    created(){
+        this.getInfo();
+    },
+    methods:{
+        getInfo(){
+            this.$axios({
+                method: 'get',
+                url: '/user/getInfo',
+                params: {
+                    pid: this.$store.state.user.id
+                }
+            }).then(res => {
+                console.log(res.data)
+                if(res.data.errno == 0){
+                    this.patient = res.data.data
+                }
+            })
+        },
+    }
+}
+
 </script>
    
 <style scoped>

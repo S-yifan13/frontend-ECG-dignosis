@@ -58,6 +58,12 @@
                 <el-input-number v-model="ecgInfo.rR" size="mini" controls-position="right"></el-input-number>&thinsp;
                 <el-input-number v-model="ecgInfo.rT" size="mini" controls-position="right"></el-input-number>
               </el-form-item>
+              <el-form-item label="类型">
+                <el-select v-model="ecgInfo.rType" placeholder="请选择">
+                    <el-option label="心电图" value="0"></el-option>
+                    <el-option label="心电信号" value="1"></el-option>
+                </el-select>
+              </el-form-item>
             </el-form>
           </c-box>
             </el-col>
@@ -130,12 +136,14 @@
 import TopGuide from "@/components/topGuide";
 import { CText } from '@chakra-ui/vue'
 import { CBox } from '@chakra-ui/vue';
+import { CSelect } from '@chakra-ui/vue'
 export default {
   name: "steps",
   components: {
     TopGuide,
     CText,
-    CBox},
+    CBox,
+    CSelect},
   data() {
     return {
       stepNow: 0,
@@ -159,7 +167,8 @@ export default {
         rQTc: '',
         rP: '',
         rR: '',
-        rT: ''
+        rT: '',
+        rType:'',
       }
     };
   },

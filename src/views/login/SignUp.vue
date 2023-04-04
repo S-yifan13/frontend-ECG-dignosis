@@ -134,9 +134,7 @@ export default {
       const self = this;
       const formData = new FormData();
       formData.append("username", self.ruleForm.username);
-      formData.append("email", self.ruleForm.email);
       formData.append("password1", self.ruleForm.pass);
-      formData.append("password2", self.ruleForm.checkPass);
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -146,34 +144,20 @@ export default {
             data: formData,
           })
           .then(res => {
-            switch (res.data.status_code) {
-              case 1:
+            console.log(res)
+            switch (res.data.errno) {
+              case 0:
                 this.$store.dispatch('saveUserInfo', {user: {
                     'username': this.ruleForm.username,
                     'confirmed': false,
                   }});
                 this.$message.success('注册成功！');
                 setTimeout(()=> {
-                  this.$router.push('/unverified_email');
+                  this.$router.push('/login');
                 },1500);
                 break;
-              case -1:
-                this.$message.warning('请检查填写的内容！');
-                break;
-              case 2:
-                this.$message.warning('用户名已注册！');
-                break;
-              case 3:
-                this.$message.error('邮箱已注册或不可用！');
-                break;
-              case 4:
-                this.$message.error('密码不符合规则，需满足8-18，英文字母+数字！');
-                break;
-              case 5:
-                this.$message.error('两次输入的密码不一致！');
-                break;
-              case 6:
-                this.$message.error('邮件验证码发送失败，请检查邮箱是否填写正确！');
+              case 1000:
+                this.$message.warning(res.data.msg);
                 break;
             }
           })
