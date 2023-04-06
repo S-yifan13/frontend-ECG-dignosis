@@ -7,7 +7,7 @@ export default new Vuex.Store({
   state: {
     user: {
       type: 'patient',
-      id: '1',
+      id: 'abf8b10eb5c84c23b23c73d70f3c1319',
       name: 'Name'
     }
   },

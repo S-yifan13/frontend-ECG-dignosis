@@ -6,18 +6,63 @@
       </el-header>
       <el-main class="main">
         <el-steps :active="this.stepNow" align-center>
+          <el-step title="患者信息" icon="el-icon-user-solid"></el-step>
           <el-step title="上传心电图" icon="el-icon-upload"></el-step>
-          <el-step title="AI辅助诊断" icon="el-icon-upload"></el-step>
-          <el-step title="人工诊断" icon="el-icon-picture"></el-step>
-          <el-step title="诊断结论" icon="el-icon-picture"></el-step>
+          <el-step title="AI辅助诊断" icon="el-icon-picture"></el-step>
+          <el-step title="人工诊断" icon="el-icon-edit"></el-step>
+          <el-step title="诊断结论" icon="el-icon-s-order"></el-step>
         </el-steps>
-        <div class="step1" v-show="stepNow === 0 || stepNow === 1">
+        <div class="step1" v-show="stepNow === 0">
+          <c-box ml="100px" mt="20px" mr="100px">
+            <el-select
+              v-model="value"
+              filterable
+              remote
+              reserve-keyword
+              placeholder="请输入关键词"
+              :remote-method="remoteMethod"
+              :loading="loading"
+              @change="selectPatient">
+              <el-option
+                v-for=" (item,index) in options"
+                :key="index"
+                :value="item.value"
+                :label="item.label">
+              </el-option>
+            </el-select>
+            <c-form-control mt="15px">
+                <c-form-label for="email">姓名</c-form-label>
+                <el-input v-model="patient.pRealName"/>
+            </c-form-control>
+            <c-form-control mt="15px">
+                <c-form-label for="email">性别</c-form-label>
+                <c-radio-group v-model="patient.pGender" is-inline>
+                <c-radio value="F">女</c-radio>
+                <c-radio value="M">男</c-radio>
+                </c-radio-group>
+            </c-form-control>
+            <c-form-control mt="15px">
+                <c-form-label for="email">年龄</c-form-label>
+                <el-input v-model="patient.pAge"/>
+            </c-form-control>
+            <c-form-control mt="15px">
+                <c-form-label for="email">联系方式</c-form-label>
+                <el-input v-model="patient.pMobile"/>
+            </c-form-control>
+            <c-form-control mt="15px">
+                <c-form-label for="email">病史</c-form-label>
+                <el-input v-model="patient.pHistory"/>
+            </c-form-control>
+          </c-box>
+          <el-button class="btn" type="primary" plain round @click="addStep">下一步</el-button>
+        </div>
+        <div class="step1" v-show="stepNow === 1 || stepNow === 2">
           <c-box mt="50px">
             <el-row>
             <el-col :span="12">
             <c-box ml="40">
             <el-upload
-              v-loading="stepNow===1"
+              v-loading="stepNow===2"
               element-loading-text="AI辅助诊断中"
               align-center
               drag
@@ -70,9 +115,11 @@
             </el-row>
           </c-box>
           <el-button class="btn" type="primary" plain round @click="addStep">下一步</el-button>
+          <el-button class="btn" type="primary" plain round @click="stepNow--">上一步</el-button>
+          
 <!--          <el-button type="primary" plain round @click="addStep" v-show="stepNow === 0">下一步</el-button>-->
         </div>
-        <div class="step3" v-show="this.stepNow === 2">
+        <div class="step3" v-show="this.stepNow === 4">
           <el-container>
             <el-aside>
               <div class="image-preview">
@@ -108,7 +155,7 @@
           <el-button class="btn" type="primary" plain round @click="addStep">提交</el-button>
           <el-button class="btn" type="primary" plain round @click="decStep">上一步</el-button>
         </div>
-        <div class="step4" v-show="this.stepNow === 3">
+        <div class="step4" v-show="this.stepNow === 4">
           <el-row style="margin-top:60px">
             <el-col :span=12>
               <el-image
@@ -136,14 +183,25 @@
 import TopGuide from "@/components/topGuide";
 import { CText } from '@chakra-ui/vue'
 import { CBox } from '@chakra-ui/vue';
-import { CSelect } from '@chakra-ui/vue'
+import { CSelect } from '@chakra-ui/vue';
+import {
+    CFormControl,
+    CFormLabel,
+    CFormErrorMessage,
+    CFormHelperText,
+  } from '@chakra-ui/vue';
+  import { CRadio, CRadioGroup } from "@chakra-ui/vue";
 export default {
   name: "steps",
   components: {
     TopGuide,
     CText,
     CBox,
-    CSelect},
+    CSelect,CFormControl,
+    CFormLabel,
+    CFormErrorMessage,
+    CFormHelperText, CRadio, CRadioGroup
+  },
   data() {
     return {
       stepNow: 0,
@@ -169,9 +227,24 @@ export default {
         rR: '',
         rT: '',
         rType:'',
-      }
+      },
+      patient:{
+            pRealName:'',
+            pGender:'',
+            pAge:'',
+            pMobile:''
+      },
+      options: [],
+      value: '',
+      list: [],
+      loading: false,
+      states: [],
     };
   },
+  created(){
+    this.getPatientList();
+  },
+  
   methods: {
     handleRemove(file) {
       this.picture = ''
@@ -205,6 +278,9 @@ export default {
     },
     addStep() {
       if(this.stepNow == 0){
+        this.stepNow++;
+      }
+      else if(this.stepNow == 1){
         if(this.picture == '')
           this.$message.warning('请上传图片');
         else{
@@ -213,17 +289,17 @@ export default {
         }
           
       }
-      else if(this.stepNow == 2){
+      else if(this.stepNow == 3){
         this.submitDoctorResult();
       }
-      else if(this.stepNow == 3){
+      else if(this.stepNow == 4){
         this.getFuLLResult()
       }
     },
     decStep() {
       this.stepNow --;
       console.log(this.stepNow)
-      if (this.stepNow === 1) {
+      if (this.stepNow === 2) {
         this.decStep()
       }
     },
@@ -301,6 +377,36 @@ export default {
           this.addStep();
         }
       })
+    },
+    remoteMethod(query) {
+        if (query !== '') {
+          this.loading = true;
+          setTimeout(() => {
+            this.loading = false;
+            this.options = this.list.filter(item => {
+              return item.label.indexOf(query) > -1;
+            });
+          }, 200);
+        } else {
+          this.options = [];
+        }
+    },
+    getPatientList(){
+      this.$axios({
+        method: 'get',
+        url: "/user/getPatientList",
+      }).then(res => {
+        console.log(res.data)
+        if(res.data.errno == 0){
+          this.states = res.data.data
+          this.list = this.states.map(item => {
+            return { value: `${item.pid}`, label: `姓名:${item.pRealName} `+ ` 年龄:${item.pAge}` };
+          });
+        }
+      })
+    },
+    selectPatient(){
+      console.log(this.value)
     }
   }
 }

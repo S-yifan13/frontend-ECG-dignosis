@@ -102,7 +102,7 @@
                         </el-col>
                     </el-row>
                     <el-row style="margin-top: 10px;">
-                        <el-form label-position="left"  :model="formLabelAlign" label-width="120px">
+                        <el-form label-position="left" label-width="120px">
                             <el-form-item label="医生姓名：" style="margin-bottom: 0;">
                                 111
                             </el-form-item>
@@ -192,7 +192,7 @@
                         </el-col>
                     </el-row>
                     <el-row style="margin-top: 10px;">
-                        <el-form label-position="left"  :model="formLabelAlign" label-width="120px">
+                        <el-form label-position="left"  label-width="120px">
                             <el-form-item label="医生姓名：" style="margin-bottom: 0;">
                                 111
                             </el-form-item>
@@ -214,7 +214,7 @@
                 <el-tab-pane label="个人信息" name="first" >
                     <c-form-control mt="15px">
                         <c-form-label for="email">姓名</c-form-label>
-                        <el-input v-model="patient.pName"/>
+                        <el-input v-model="patient.pRealName"/>
                     </c-form-control>
                     <c-form-control mt="15px">
                         <c-form-label for="email">性别</c-form-label>
@@ -228,18 +228,16 @@
                         <el-input v-model="patient.pAge"/>
                     </c-form-control>
                     <c-form-control mt="15px">
-                        <c-form-label for="email">身份证号</c-form-label>
-                        <el-input v-model="patient.pcid"/>
-                    </c-form-control>
-                    <c-form-control mt="15px">
                         <c-form-label for="email">联系方式</c-form-label>
                         <el-input v-model="patient.pMobile"/>
                     </c-form-control>
-                    <c-button variant-color="blue" size="md" mt="20px">更新</c-button>
+                    <c-form-control mt="15px">
+                        <c-form-label for="email">病史</c-form-label>
+                        <el-input v-model="patient.pHistory"/>
+                    </c-form-control>
+                    <c-button variant-color="blue" size="md" mt="20px" @click="changeInfo()">更新</c-button>
                 </el-tab-pane>
                 <el-tab-pane label="账户设置" name="second">
-                    <c-heading as="h4" size="sm" mt="10px" mb="10px">账户邮箱</c-heading>
-                    <el-input :disabled="true" style="pointer-events: none;opacity: 0.6;" v-model="user.uEmail"></el-input>
                     <c-heading as="h4" size="sm" mt="35px" mb="10px">修改用户名</c-heading>
                     <el-row>
                         <el-col :span="20">
@@ -250,7 +248,7 @@
                         </el-col>
                     </el-row>
                     <c-heading as="h4" size="sm" mt="35px" mb="10px">修改密码</c-heading>
-                    <el-form label-position="left" label-width="80px" :model="formLabelAlign">
+                    <el-form label-position="left" label-width="80px" >
                     <el-form-item label="当前密码">
                         <el-input placeholder="请输入当前密码" show-password v-model="password1"></el-input>
                     </el-form-item>
@@ -306,7 +304,7 @@
         qrs:'182',
         qtc:'382',
         patient:{
-            pName:'qq',
+            pRealName:'qq',
             pGender:'F',
             pAge:'40',
             pcid:'510274198901010010',
@@ -339,6 +337,27 @@
                 }
             })
         },
+        changeInfo(){
+            const formData = new FormData();
+            formData.append("pid", this.$store.state.user.id);
+            formData.append("pGender", this.patient.pGender);
+            formData.append("pAge", this.patient.pAge);
+            formData.append("pMobile", this.patient.pMobile);
+            formData.append("pRealName", this.patient.pRealName);
+            formData.append("pHistory", this.patient.pHistory);
+            this.$axios({
+                method: 'post',
+                url: '/user/changePInfo',
+                data: formData,
+            }).then(res => {
+                console.log(res.data)
+                if(res.data.errno == 0){
+                    this.$message.success("修改成功")
+                }
+                else
+                    this.$message.warning(res.data.msg)
+            })
+        }
     }
 }
 
