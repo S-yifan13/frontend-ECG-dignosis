@@ -19,15 +19,15 @@
               filterable
               remote
               reserve-keyword
-              placeholder="请输入关键词"
+              placeholder="搜索"
               :remote-method="remoteMethod"
-              :loading="loading"
-              @change="selectPatient">
+              :loading="loading">
               <el-option
                 v-for=" (item,index) in options"
                 :key="index"
                 :value="item.value"
-                :label="item.label">
+                :label="item.label"
+                @click.native="selectPatient(item.content)">
               </el-option>
             </el-select>
             <c-form-control mt="15px">
@@ -61,7 +61,17 @@
             <el-row>
             <el-col :span="12">
             <c-box ml="40">
+              <el-form>
+                <el-form-item label="类型">
+                  <el-select v-model="ecgInfo.rType" placeholder="请选择">
+                      <el-option label="心电图" value="0"></el-option>
+                      <el-option label="心电信号" value="1"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-form>
             <el-upload
+              v-if="ecgInfo.rType == 0"
+              style="margin-top: 40px"
               v-loading="stepNow===2"
               element-loading-text="AI辅助诊断中"
               align-center
@@ -103,12 +113,6 @@
                 <el-input-number v-model="ecgInfo.rR" size="mini" controls-position="right"></el-input-number>&thinsp;
                 <el-input-number v-model="ecgInfo.rT" size="mini" controls-position="right"></el-input-number>
               </el-form-item>
-              <el-form-item label="类型">
-                <el-select v-model="ecgInfo.rType" placeholder="请选择">
-                    <el-option label="心电图" value="0"></el-option>
-                    <el-option label="心电信号" value="1"></el-option>
-                </el-select>
-              </el-form-item>
             </el-form>
           </c-box>
             </el-col>
@@ -119,7 +123,7 @@
           
 <!--          <el-button type="primary" plain round @click="addStep" v-show="stepNow === 0">下一步</el-button>-->
         </div>
-        <div class="step3" v-show="this.stepNow === 4">
+        <div class="step3" v-show="this.stepNow === 3">
           <el-container>
             <el-aside>
               <div class="image-preview">
@@ -226,13 +230,15 @@ export default {
         rP: '',
         rR: '',
         rT: '',
-        rType:'',
+        rType: '0',
       },
       patient:{
-            pRealName:'',
-            pGender:'',
-            pAge:'',
-            pMobile:''
+        pRealName:'',
+        pGender:'',
+        pAge:'',
+        pMobile:'',
+        pid:'',
+        pHistory:'',
       },
       options: [],
       value: '',
@@ -278,6 +284,9 @@ export default {
     },
     addStep() {
       if(this.stepNow == 0){
+        if(this.patient.pRealName == '' || this.patient.pGender == '' || this.patient.pAge == '')
+          this.$message.warning('请选择患者');
+        else
         this.stepNow++;
       }
       else if(this.stepNow == 1){
@@ -345,6 +354,7 @@ export default {
       for (let key in this.ecgInfo){
         formData.append(key, this.ecgInfo[key])
       }
+      formData.append('pid', this.patient.pid)
       this.$axios({
         method: 'post',
         url: "/diagnosis/aiResult",
@@ -400,13 +410,14 @@ export default {
         if(res.data.errno == 0){
           this.states = res.data.data
           this.list = this.states.map(item => {
-            return { value: `${item.pid}`, label: `姓名:${item.pRealName} `+ ` 年龄:${item.pAge}` };
+            return { value: `${item.pid}`, label: `姓名:${item.pRealName} `+ ` 年龄:${item.pAge}`, content: item };
           });
         }
       })
     },
-    selectPatient(){
-      console.log(this.value)
+    selectPatient(item){
+      this.patient = item
+      console.log()
     }
   }
 }

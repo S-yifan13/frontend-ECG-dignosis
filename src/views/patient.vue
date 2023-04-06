@@ -26,185 +26,99 @@
     <el-container >
         <c-box v-if="activeMenuItem == '1'" style="padding:60px 100px" >
             <el-timeline>
-                <el-timeline-item timestamp="2018/4/12" placement="top">
-                <c-box boxShadow="0 0 10px rgba(0, 0, 0, 0.2)" rounded='md'
-                    borderRadius='5px' border='1px' borderColor='gray.200' 
-                    padding="40px" width="1000px" >
-                    <el-row>
-                        <el-col :span="10">
-                            <el-image
-                            style="width: 430px; "
-                            :src="require('@/assets/images/ecg.png')"
-                            class="bounce" ></el-image>
-                        </el-col>
-                        <el-col :span="10" :offset="2">
-                            <el-row style="margin-top: 5px;">
-                                <el-col :span="7" :offset="2">  
-                                    姓名：xxx
-                                </el-col>
-                                <el-col :span="7">
-                                    性别：女
-                                </el-col>
-                                <el-col :span="7">
-                                    年龄：40
-                                </el-col>
-                            </el-row>
-                            <table class="table">
-                            <thead>
-                                <tr>
-                                <th>参数</th>
-                                <th>结果</th>
-                                <th>单位</th>
-                                <th>参考区间</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th>心室率</th>
-                                    <td v-if="xsl>100" style="color:red">56 <i class="el-icon-top"></i></td>
-                                    <td v-else-if="xsl<60" style="color:green">56 <i class="el-icon-bottom"></i></td>
-                                    <td v-else>56</td>
-                                    <td>bpm</td>
-                                    <td>60 ~ 100</td>
-                                </tr>
-                                <tr>
-                                    <th>PR间期</th>
-                                    <td v-if="pr>200" style="color:red">186 <i class="el-icon-top"></i></td>
-                                    <td v-else-if="pr<120" style="color:green">186 <i class="el-icon-bottom"></i></td>
-                                    <td v-else>186</td>
-                                    <td>ms</td>
-                                    <td>120 ~ 200</td>
-                                </tr>
-                                <tr>
-                                    <th>QRS宽度</th>
-                                    <td v-if="qrs>100" style="color:red">182 <i class="el-icon-top"></i></td>
-                                    <td v-else-if="qrs<60" style="color:green">182 <i class="el-icon-bottom"></i></td>
-                                    <td v-else>182</td>
-                                    <td>ms</td>
-                                    <td>60 ~ 100</td>
-                                </tr>
-                                <tr>
-                                    <th>QT/QTc</th>
-                                    <td v-if="qtc>440" style="color:red">182 <i class="el-icon-top"></i></td>
-                                    <td v-else>374/392</td>
-                                    <td>ms</td>
-                                    <td>260 ~ 440 / ~ 440</td>
-                                </tr>
-                                <tr>
-                                    <th>P-R-T轴</th>
-                                    <td>25-72-59</td>
-                                    <td>度</td>
-                                    <td>-30 ~ +90</td>
-                                </tr>
-                            </tbody>
-                            </table>
-                            <c-text ml="30px" mt="10px">AI辅助诊断结果：111</c-text>
-                        </el-col>
-                    </el-row>
-                    <el-row style="margin-top: 10px;">
-                        <el-form label-position="left" label-width="120px">
-                            <el-form-item label="医生姓名：" style="margin-bottom: 0;">
-                                111
-                            </el-form-item>
-                            <el-form-item label="医生诊断结果：" style="margin-bottom: 0;">
-                                111
-                            </el-form-item>
-                            <el-form-item label="诊断建议："  style="margin-bottom: 0;">
-                                111
-                            </el-form-item>
-                        </el-form>
-                    </el-row>
-                </c-box>
-                </el-timeline-item>
-                <el-timeline-item timestamp="2018/4/3" placement="top">
+                <el-timeline-item 
+                    placement="top"
+                    v-for="(item, index) in list"
+                    :key="index"
+                    :timestamp="item.rTime">
                     <c-box boxShadow="0 0 10px rgba(0, 0, 0, 0.2)" rounded='md'
-                    borderRadius='5px' border='1px' borderColor='gray.200' 
-                    padding="40px" width="1000px">
-                    <el-row>
-                        <el-col :span="10">
-                            <el-image
-                            style="width: 430px; "
-                            :src="require('@/assets/images/ecg.png')"
-                            class="bounce" ></el-image>
-                        </el-col>
-                        <el-col :span="10" :offset="2">
-                            <el-row style="margin-top: 5px;">
-                                <el-col :span="7" :offset="2">  
-                                    姓名：xxx
-                                </el-col>
-                                <el-col :span="7">
-                                    性别：女
-                                </el-col>
-                                <el-col :span="7">
-                                    年龄：40
-                                </el-col>
-                            </el-row>
-                            <table class="table">
-                            <thead>
-                                <tr>
-                                <th>参数</th>
-                                <th>结果</th>
-                                <th>单位</th>
-                                <th>参考区间</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th>心室率</th>
-                                    <td v-if="xsl>100" style="color:red">56 <i class="el-icon-top"></i></td>
-                                    <td v-else-if="xsl<60" style="color:green">56 <i class="el-icon-bottom"></i></td>
-                                    <td v-else>56</td>
-                                    <td>bpm</td>
-                                    <td>60 ~ 100</td>
-                                </tr>
-                                <tr>
-                                    <th>PR间期</th>
-                                    <td v-if="pr>200" style="color:red">186 <i class="el-icon-top"></i></td>
-                                    <td v-else-if="pr<120" style="color:green">186 <i class="el-icon-bottom"></i></td>
-                                    <td v-else>186</td>
-                                    <td>ms</td>
-                                    <td>120 ~ 200</td>
-                                </tr>
-                                <tr>
-                                    <th>QRS宽度</th>
-                                    <td v-if="qrs>100" style="color:red">182 <i class="el-icon-top"></i></td>
-                                    <td v-else-if="qrs<60" style="color:green">182 <i class="el-icon-bottom"></i></td>
-                                    <td v-else>182</td>
-                                    <td>ms</td>
-                                    <td>60 ~ 100</td>
-                                </tr>
-                                <tr>
-                                    <th>QT/QTc</th>
-                                    <td v-if="qtc>440" style="color:red">182 <i class="el-icon-top"></i></td>
-                                    <td v-else>374/392</td>
-                                    <td>ms</td>
-                                    <td>260 ~ 440 / ~ 440</td>
-                                </tr>
-                                <tr>
-                                    <th>P-R-T轴</th>
-                                    <td>25-72-59</td>
-                                    <td>度</td>
-                                    <td>-30 ~ +90</td>
-                                </tr>
-                            </tbody>
-                            </table>
-                            <c-text ml="30px" mt="10px">AI辅助诊断结果：111</c-text>
-                        </el-col>
-                    </el-row>
-                    <el-row style="margin-top: 10px;">
-                        <el-form label-position="left"  label-width="120px">
-                            <el-form-item label="医生姓名：" style="margin-bottom: 0;">
-                                111
-                            </el-form-item>
-                            <el-form-item label="医生诊断结果：" style="margin-bottom: 0;">
-                                111
-                            </el-form-item>
-                            <el-form-item label="诊断建议："  style="margin-bottom: 0;">
-                                111
-                            </el-form-item>
-                        </el-form>
-                    </el-row>
-                </c-box>
+                        borderRadius='5px' border='1px' borderColor='gray.200' 
+                        padding="40px" width="1000px" >
+                        <el-row>
+                            <el-col :span="10">
+                                <el-image
+                                style="width: 430px; height: 350px;"
+                                :src="item.rEcg"
+                                class="bounce" ></el-image>
+                            </el-col>
+                            <el-col :span="10" :offset="2">
+                                <el-row style="margin-top: 5px;">
+                                    <el-col :span="7" :offset="2">  
+                                        姓名：{{ patient.pRealName }}
+                                    </el-col>
+                                    <el-col :span="7">
+                                        性别：{{ patient.pGender=='M' ?'男':'女' }}
+                                    </el-col>
+                                    <el-col :span="7">
+                                        年龄：{{ patient.pAge }}
+                                    </el-col>
+                                </el-row>
+                                <table class="table">
+                                <thead>
+                                    <tr>
+                                    <th>参数</th>
+                                    <th>结果</th>
+                                    <th>单位</th>
+                                    <th>参考区间</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>心室率</th>
+                                        <td v-if="item.rBpm>100" style="color:red">{{item.rBpm}} <i class="el-icon-top"></i></td>
+                                        <td v-else-if="item.rBpm<60" style="color:green">{{item.rBpm}} <i class="el-icon-bottom"></i></td>
+                                        <td v-else>{{item.rBpm}}</td>
+                                        <td>bpm</td>
+                                        <td>60 ~ 100</td>
+                                    </tr>
+                                    <tr>
+                                        <th>PR间期</th>
+                                        <td v-if="item.rPR>200" style="color:red">{{item.rPR}} <i class="el-icon-top"></i></td>
+                                        <td v-else-if="item.rPR<120" style="color:green">{{item.rPR}} <i class="el-icon-bottom"></i></td>
+                                        <td v-else>{{item.rPR}}</td>
+                                        <td>ms</td>
+                                        <td>120 ~ 200</td>
+                                    </tr>
+                                    <tr>
+                                        <th>QRS宽度</th>
+                                        <td v-if="item.rQRS>100" style="color:red">{{item.rQRS}} <i class="el-icon-top"></i></td>
+                                        <td v-else-if="item.rQRS<60" style="color:green">{{item.rQRS}} <i class="el-icon-bottom"></i></td>
+                                        <td v-else>{{item.rQRS}}</td>
+                                        <td>ms</td>
+                                        <td>60 ~ 100</td>
+                                    </tr>
+                                    <tr>
+                                        <th>QT/QTc</th>
+                                        <td v-if="item.rQTc>440" style="color:red">{{ item.rQTc }} <i class="el-icon-top"></i></td>
+                                        <td v-else>374/392</td>
+                                        <td>ms</td>
+                                        <td>260 ~ 440 / ~ 440</td>
+                                    </tr>
+                                    <tr>
+                                        <th>P-R-T轴</th>
+                                        <td>{{item.rP}}-{{item.rR}}-{{item.rT}}</td>
+                                        <td>度</td>
+                                        <td>-30 ~ +90</td>
+                                    </tr>
+                                </tbody>
+                                </table>
+                                <c-text ml="30px" mt="10px">AI辅助诊断结果：{{item.rAiResult}}</c-text>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top: 10px;">
+                            <el-form label-position="left" label-width="120px">
+                                <el-form-item label="医生姓名：" style="margin-bottom: 0;">
+                                    111
+                                </el-form-item>
+                                <el-form-item label="医生诊断结果：" style="margin-bottom: 0;">
+                                    {{ item.rConclusion }}
+                                </el-form-item>
+                                <el-form-item label="诊断建议："  style="margin-bottom: 0;">
+                                    {{ item.rAdvice }}
+                                </el-form-item>
+                            </el-form>
+                        </el-row>
+                    </c-box>
                 </el-timeline-item>
             </el-timeline>
         </c-box>
@@ -299,10 +213,6 @@
       return {
         activeMenuItem:'1',
         activeTab: 'first',
-        xsl:'56',
-        pr:'186',
-        qrs:'182',
-        qtc:'382',
         patient:{
             pRealName:'qq',
             pGender:'F',
@@ -317,10 +227,12 @@
         password1:'',
         password2:'',
         password3:'',
+        list:[]
       }
     },
     created(){
         this.getInfo();
+        this.getList();
     },
     methods:{
         getInfo(){
@@ -356,6 +268,20 @@
                 }
                 else
                     this.$message.warning(res.data.msg)
+            })
+        },
+        getList(){
+            this.$axios({
+                method: 'get',
+                url: '/user/getDiagnosisList',
+                params: {
+                    pid: this.$store.state.user.id
+                }
+            }).then(res => {
+                console.log(res.data)
+                if(res.data.errno == 0){
+                    this.list = res.data.data
+                }
             })
         }
     }
