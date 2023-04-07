@@ -1,11 +1,19 @@
 <template>
   <div id="topGuide">
     <el-row>
-    <el-col :span="18"><img :src="require('../assets/images/logo3.png')" class="topGuideImage"></el-col>
+    <el-col :span="16" v-if="$store.state.user.type == 'doctor'"><img :src="require('../assets/images/logo3.png')" class="topGuideImage"></el-col>
+    <el-col :span="18" v-else><img :src="require('../assets/images/logo3.png')" class="topGuideImage"></el-col>
     <el-col :span="2">
       <div class="guide">
         <el-button type="text" style="font-size: 16px;" @click="()=>{$router.push('/')}">
           首页
+        </el-button>
+      </div>
+    </el-col>
+    <el-col :span="2" v-if="$store.state.user.type == 'doctor'">
+      <div class="guide">
+        <el-button type="text" style="font-size: 16px;" @click="()=>{$router.push('/diagnose')}">
+          诊断
         </el-button>
       </div>
     </el-col>

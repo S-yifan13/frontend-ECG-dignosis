@@ -70,10 +70,14 @@ export default {
       }).then(res => {
         console.log(res.data)
         if(res.data.errno == 0){
-          this.$message.success("登录成功");
-          this.$store.state.user.id = res.data.data.pid;
           this.$store.state.user.name = this.form.username;
+          this.$message.success("登录成功");
           this.$store.state.user.type = res.data.data.type;
+          if (res.data.data.type == "doctor")
+            this.$store.state.user.id = res.data.data.did;
+          else
+            this.$store.state.user.id = res.data.data.pid;
+            console.log(this.$store.state.user)
           setTimeout(() => {
             if(this.form.type == "patient")
             this.$router.push('/patient');
