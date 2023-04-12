@@ -89,8 +89,8 @@
                                     </tr>
                                     <tr>
                                         <th>QT/QTc</th>
-                                        <td v-if="item.rQTc>440" style="color:red">{{ item.rQTc }} <i class="el-icon-top"></i></td>
-                                        <td v-else>374/392</td>
+                                        <td v-if="item.rQTc>440" style="color:red">{{ item.rQT }} / {{ item.rQTc }} <i class="el-icon-top"></i></td>
+                                        <td v-else>{{ item.rQT }} / {{ item.rQTc }}</td>
                                         <td>ms</td>
                                         <td>260 ~ 440 / ~ 440</td>
                                     </tr>
@@ -108,7 +108,7 @@
                         <el-row style="margin-top: 10px;">
                             <el-form label-position="left" label-width="120px">
                                 <el-form-item label="医生姓名：" style="margin-bottom: 0;">
-                                    111
+                                    {{ item.dName }}
                                 </el-form-item>
                                 <el-form-item label="医生诊断结果：" style="margin-bottom: 0;">
                                     {{ item.rConclusion }}
