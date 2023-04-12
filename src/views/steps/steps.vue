@@ -88,7 +88,23 @@
                   </el-image>
               </div>
               <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-              <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过20Mb</div>
+              <div class="el-upload__tip" slot="tip">只能上传jpg/png文件</div>
+            </el-upload>
+            <el-upload
+              v-else
+              style="margin-top: 40px"
+              v-loading="stepNow===2"
+              element-loading-text="AI辅助诊断中"
+              align-center
+              drag
+              :file-list="fileList2"
+              :action=uploadFileUrl
+              :http-request="upLoadFile"
+              :before-upload="beforeUpload"
+              :on-success="handleSuccess">
+              <i class="el-icon-upload"></i>
+              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+              <div class="el-upload__tip" slot="tip">只能上传csv文件</div>
             </el-upload>
           </c-box>
             </el-col>
@@ -114,14 +130,14 @@
                 <el-input-number v-model="ecgInfo.rT" size="mini" controls-position="right"></el-input-number>
               </el-form-item>
             </el-form>
+            <el-button class="btn" type="primary" plain round @click="addStep">下一步</el-button>
+            <el-button class="btn" type="primary" plain round @click="stepNow--">上一步</el-button>
+
           </c-box>
             </el-col>
             </el-row>
           </c-box>
-          <el-button class="btn" type="primary" plain round @click="addStep">下一步</el-button>
-          <el-button class="btn" type="primary" plain round @click="stepNow--">上一步</el-button>
-          
-<!--          <el-button type="primary" plain round @click="addStep" v-show="stepNow === 0">下一步</el-button>-->
+                    
         </div>
         <div class="step3" v-show="this.stepNow === 3">
           <el-container>
@@ -210,10 +226,12 @@ export default {
     return {
       stepNow: 0,
       uploadImgUrl: '/api/rs/image/upload',
+      upLoadFileUrl: '/api/rs/file/upload',
       url: '',
       srcList: [],
       doctorResult: '',
       fileList:[],
+      filelist2:[],
       picture:'',
       advice: '',
       rid:'',
@@ -230,7 +248,7 @@ export default {
         rP: '',
         rR: '',
         rT: '',
-        rType: '0',
+        rType: '1',
       },
       patient:{
         pRealName:'',
@@ -245,6 +263,7 @@ export default {
       list: [],
       loading: false,
       states: [],
+      csv:'',
     };
   },
   created(){
@@ -252,6 +271,23 @@ export default {
   },
   
   methods: {
+    beforeUpload(file) {
+      // 验证文件类型和大小等
+      const isCSV = file.type === 'text/csv';
+      if (!isCSV) {
+        this.$message.error('只能上传 CSV 格式的文件');
+      }
+      const isLt2M = file.size / 1024 / 1024 < 20;
+      if (!isLt2M) {
+        this.$message.error('文件大小不能超过 20MB');
+      }
+      return isCSV && isLt2M;
+    },
+    handleSuccess(response, file, fileList) {
+      // 处理上传成功的逻辑
+      // response 是上传成功后服务器返回的数据，可以根据需求进行处理
+      console.log("上传成功", response);
+    },
     handleRemove(file) {
       this.picture = ''
     },
@@ -263,8 +299,11 @@ export default {
       this.srcList = [];
       this.doctorResult = '',
       this.fileList = [],
+      this.filelist2 = [],
       this.picture = '',
-      this.conclusion = ''
+      this.conclusion = '',
+      this.advice = '',
+      this.csv = ''
     },
     getFuLLResult(){
       this.$axios({
@@ -290,8 +329,10 @@ export default {
         this.stepNow++;
       }
       else if(this.stepNow == 1){
-        if(this.picture == '')
+        if(this.rType == '0' && this.picture == '')
           this.$message.warning('请上传图片');
+        else if(this.rType == '1' && this.csv == '')
+          this.$message.warning('请上传CSV文件');
         else{
           this.stepNow++;
           this.getAIResult();
@@ -348,9 +389,28 @@ export default {
         })
 
     },
+    upLoadFile(file) {
+      const formData = new FormData();
+      formData.append('file', file.file);
+      this.$axios({
+        method: 'post',
+        url: this.upLoadFileUrl,
+        data: formData,
+      }).then(res => {
+        console.log(res.data)
+          if(res.data.errno == 0){
+            this.$message.success("上传成功！");
+            this.csv = res.data.path;
+          }
+          else
+          this.$message.error("操作失败！");
+        })
+
+    },
     getAIResult(){
       const formData = new FormData();
       formData.append('imgURL', this.picture);
+      formData.append('csvURL', this.csv);
       for (let key in this.ecgInfo){
         formData.append(key, this.ecgInfo[key])
       }
@@ -368,13 +428,19 @@ export default {
           this.url=this.srcList[0]
           this.stepNow++;
         }
+        else if(res.data.errno == 1){
+          this.rid = res.data.data.rid
+          this.aiResult = res.data.data.result
+          this.stepNow++;
+        }
       })
     },
     submitDoctorResult(){
       const formData = new FormData();
       formData.append('rid', this.rid);
       formData.append('rConclusion', this.doctorResult);
-      formData.append('rAdvice', this.advice)
+      formData.append('rAdvice', this.advice);
+      formData.append('did', this.$store.state.user.id);
       this.$axios({
         method: 'post',
         url: "/diagnosis/manual",
