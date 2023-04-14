@@ -231,8 +231,9 @@
       }
     },
     created(){
-        this.getInfo();
         this.getList();
+        this.getInfo();
+        
     },
     methods:{
         getInfo(){

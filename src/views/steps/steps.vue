@@ -248,7 +248,7 @@ export default {
         rP: '',
         rR: '',
         rT: '',
-        rType: '1',
+        rType: '0',
       },
       patient:{
         pRealName:'',

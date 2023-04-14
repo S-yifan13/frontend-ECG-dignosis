@@ -36,7 +36,7 @@
             <CAvatar :name="$store.state.user.name" size="sm" bg="#128acf" color="#FFFFFF"></CAvatar>
           </template>
           <template #default>
-            <div><el-button type="primary" size="small" style="width: 100%; margin-bottom: 20px;" v-if="$store.state.user.type == 'patient'">个人信息</el-button></div>
+            <div><el-button type="primary" size="small" style="width: 100%; margin-bottom: 20px;" v-if="$store.state.user.type == 'patient'" @click="()=>{$router.push('/patient')}">个人主页</el-button></div>
             <div><el-button type="danger" size="small" style="width: 100%; " @click="logout()">退出登录</el-button></div>
           </template>
         </el-popover>
