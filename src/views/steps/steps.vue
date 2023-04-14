@@ -496,7 +496,9 @@ export default {
   padding-top: 60px;
 }
 .el-header{
-  padding: 0 !important;
+  padding: 0!important;
+  height: 70px!important;
+  background: rgb(233, 237, 255);
 }
 .step1 {
   width: 100%;
