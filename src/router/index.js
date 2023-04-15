@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import SignIn from "../views/login/SignIn.vue"
 import SignUp from "../views/login/SignUp.vue"
-import Patient from "../views/patient.vue"
+import Patient from "../views/patient/patient.vue"
 
 Vue.use(VueRouter)
 
