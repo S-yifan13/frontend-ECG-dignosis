@@ -5,10 +5,10 @@
       </el-header>
       <c-box>
         <el-row>
-          <el-col :span="8">
+          <el-col :span="9">
             <img src="../assets/images/ecg.gif" alt="GIF Image" style="margin-top: 120px; margin-left: 150px; height: 300px;">
           </el-col>
-          <el-col :span="16">
+          <el-col :span="15">
             <c-text fontSize="100px" fontWeight="bold" textAlign="center" mt="50px" color="rgb(30,93,173)">HeartZone</c-text>
             <c-text fontSize="50px" fontWeight="bold" textAlign="center" color="rgb(30,93,173)">心电图AI诊断系统</c-text>
             <c-text fontSize="25px" ml="350px" textAlign="left" mt="3" color="#eeeeee">· 对ECG信号进行AI诊断</c-text>

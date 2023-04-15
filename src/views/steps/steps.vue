@@ -140,17 +140,24 @@
                     
         </div>
         <div class="step3" v-show="this.stepNow === 3">
-          <el-container>
-            <el-aside>
+          <el-row>
+            <el-col :span="8">
               <div class="image-preview">
                 <el-image
-                  style="width: 200px; height: 200px"
+                  v-if="ecgInfo.rType == '0'"
+                  style="width: 300px; height: 200px"
+                  :src="url"
+                  :preview-src-list="srcList">
+                </el-image>
+                <el-image
+                  v-else
+                  style="width: 400px; height: 200px"
                   :src="url"
                   :preview-src-list="srcList">
                 </el-image>
               </div>
-            </el-aside>
-            <el-main>
+            </el-col>
+            <el-col :span="16">
               <p style="margin: 2vh 0;">AI辅助诊断结果：{{ aiResult }}</p>
               <c-box mt="5" >
               <c-text>医生诊断结果</c-text>
@@ -170,8 +177,8 @@
                 v-model="advice">
               </el-input>
               </c-box>
-            </el-main>
-          </el-container>
+            </el-col>
+          </el-row>
           <el-button class="btn" type="primary" plain round @click="addStep">提交</el-button>
           <el-button class="btn" type="primary" plain round @click="decStep">上一步</el-button>
         </div>
@@ -179,10 +186,17 @@
           <el-row style="margin-top:60px">
             <el-col :span=12>
               <el-image
-                style="width: 400px; height: 300px; margin-left: 100px"
-                :src="url"
-                :preview-src-list="srcList">
-              </el-image>
+                  v-if="ecgInfo.rType == '0'"
+                  style="width: 400px; height: 300px; margin-left: 100px;"
+                  :src="url"
+                  :preview-src-list="srcList">
+                </el-image>
+                <el-image
+                  v-else
+                  style="width: 600px; height: 200px; margin-left: 50px;"
+                  :src="url"
+                  :preview-src-list="srcList">
+                </el-image>
             </el-col>
             <el-col :span=12>
               <p style="margin: 3vh 0;">AI辅助诊断结果：{{ aiResult }}</p>
@@ -421,16 +435,18 @@ export default {
         data: formData,
       }).then(res => {
         console.log(res.data)
-        if(res.data.errno == 0){
+        if(res.data.errno == 0 && this.ecgInfo.rType == 0){
           this.rid = res.data.data.rid
           this.aiResult = res.data.data.result
           this.srcList = res.data.data.rEcg
-          this.url=this.srcList[0]
+          this.url= this.srcList[0]
           this.stepNow++;
         }
-        else if(res.data.errno == 1){
+        else if(res.data.errno == 0 && this.ecgInfo.rType == 1){
           this.rid = res.data.data.rid
           this.aiResult = res.data.data.result
+          this.srcList = res.data.data.rEcg
+          this.url= this.srcList[0]
           this.stepNow++;
         }
       })
@@ -498,7 +514,7 @@ export default {
 .el-header{
   padding: 0!important;
   height: 70px!important;
-  background: rgb(233, 237, 255);
+  background: #141D41;
 }
 .step1 {
   width: 100%;
