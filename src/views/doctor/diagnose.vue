@@ -202,22 +202,64 @@
               <p style="margin: 3vh 0;">AI辅助诊断结果：{{ aiResult }}</p>
               <p style="margin: 3vh 0;"><span>医生诊断结论：{{ conclusion }}</span></p>
               <p style="margin: 3vh 0;"><span>治疗建议：{{ advice }}</span></p>
+              <c-button size="sm" @click="generatePdf"  style="float:right;">生成PDF</c-button>
             </el-col>
           </el-row>
           <el-button class="btn" type="primary" plain round @click="done">完成</el-button>
           <el-button class="btn" type="primary" plain round @click="decStep">上一步</el-button>
         </div>
       </el-main>
-
     </el-container>
+    <div id="PDF" style="display:none; width: 800px;padding: 50px;">
+        <c-heading as="h2" size="lg" textAlign="center">HeartZone 心电图诊断记录</c-heading>
+        <el-divider border-color="black"></el-divider>
+        <el-row style=" text-align: center;">
+            <el-col :span="8">  
+                姓名：{{ patient.pRealName }}
+            </el-col>
+            <el-col :span="8">
+                性别：{{ patient.pGender=='M' ?'男':'女' }}
+            </el-col>
+            <el-col :span="8">
+                年龄：{{ patient.pAge }}
+            </el-col>
+        </el-row>
+        <el-row style=" text-align: center;margin-top: 10px;">
+            <el-col >
+                诊断时间：{{ rTime }}
+            </el-col>
+        </el-row>
+        <el-divider border-color="black"></el-divider>
+        <el-row style="margin-top: 10px; margin-left: 90px;">
+            <el-form label-position="left" label-width="120px">
+                <el-form-item label="心电图：" style="margin-bottom: 0;">
+                    <img :src=url style="height:300px" crossOrigin="anonymous" />
+                </el-form-item>
+                <el-form-item label="AI诊断结果：" style="margin-bottom: 0;">
+                    {{ aiResult }}
+                </el-form-item>
+                <el-form-item label="医生诊断结果：" style="margin-bottom: 0;">
+                    {{ conclusion }}
+                </el-form-item>
+                <el-form-item label="诊断建议："  style="margin-bottom: 0;">
+                    {{ advice }}
+                </el-form-item>
+            </el-form>
+            <c-text ml="350px" mt="30px">医生签名：</c-text>
+        </el-row>
+    </div>
   </div>
 </template>
 
 <script>
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import html2canvas from 'html2canvas';
 import TopGuide from "@/components/topGuide";
 import { CText } from '@chakra-ui/vue'
 import { CBox } from '@chakra-ui/vue';
 import { CSelect } from '@chakra-ui/vue';
+import { CButton, CHeading } from '@chakra-ui/vue';
 import {
     CFormControl,
     CFormLabel,
@@ -234,7 +276,8 @@ export default {
     CSelect,CFormControl,
     CFormLabel,
     CFormErrorMessage,
-    CFormHelperText, CRadio, CRadioGroup
+    CFormHelperText, CRadio, CRadioGroup,
+    CButton,CHeading
   },
   data() {
     return {
@@ -251,6 +294,7 @@ export default {
       rid:'',
       aiResult:'',
       conclusion:'',
+      rTime:'',
       dialogVisible: false,
       dialogImageUrl: '',
       ecgInfo:{
@@ -327,10 +371,11 @@ export default {
           rid: this.rid
         }
       }).then(res=>{
-        console.log(res);
+        console.log(res.data);
         if(res.data.errno == 0){
           this.aiResult = res.data.data.rAiResult;
           this.conclusion = res.data.data.rConclusion;
+          this.rTime = res.data.data.rTime;
         }
 
       })
@@ -500,6 +545,24 @@ export default {
     selectPatient(item){
       this.patient = item
       console.log()
+    },
+    generatePdf() {
+      let _this = this;
+      const doc = new jsPDF();
+      const element = document.getElementById('PDF');
+      element.style.display = 'block';
+      html2canvas(element,{ useCORS: true }).then((canvas) => {
+          const imgData = canvas.toDataURL('image/png')
+          const pdf = new jsPDF();
+          pdf.addImage(imgData, 'PNG', 0, 0, 210, 220);
+          pdf.save(_this.patient.pRealName + '.pdf');
+      });
+      element.style.display = 'none';
+      // doc.html(template, {
+      // callback: function (doc) {
+      //     doc.save();
+      // }
+      // });
     }
   }
 }

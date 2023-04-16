@@ -24,10 +24,17 @@
           </el-button>
         </div>
       </el-col>
-      <el-col :span="2">
+      <el-col :span="2" v-if="$store.state.user.type == 'patient'">
         <div class="guide">
           <el-button type="text"  @click="()=>{$router.push('/popularization')}" style="font-size: 16px;">
             科普
+          </el-button>
+        </div>
+      </el-col>
+      <el-col :span="2" v-else-if="$store.state.user.type == 'doctor'">
+        <div class="guide">
+          <el-button type="text"  @click="()=>{$router.push('/history')}" style="font-size: 16px;">
+            历史记录
           </el-button>
         </div>
       </el-col>

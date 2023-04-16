@@ -16,7 +16,7 @@ const routes = [
   {
     path: '/diagnose',
     name: 'stepsPage',
-    component: () => import('../views/steps/steps'),
+    component: () => import('../views/doctor/diagnose'),
   },{
     path: '/popularization',
     name: 'sciencePopularization',
@@ -37,6 +37,10 @@ const routes = [
     name: 'Patient',
     component:Patient
 
+  },{
+    path:'/history',
+    name:'History',
+    component:()=>import('../views/doctor/history')
   }
 ]
 
