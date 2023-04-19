@@ -1,8 +1,6 @@
 <template>
   <c-box class="homepage">
-      <el-header>
-        <top-guide></top-guide>
-      </el-header>
+      <top-guide></top-guide>
       <c-box>
         <el-row>
           <el-col :span="9">

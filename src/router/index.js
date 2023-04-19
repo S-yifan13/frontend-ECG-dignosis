@@ -41,6 +41,14 @@ const routes = [
     path:'/history',
     name:'History',
     component:()=>import('../views/doctor/history')
+  },{
+    path:'/imageDiagnose',
+    name:'ImageDiagnose',
+    component:()=>import('../views/api/imageDiagnose')
+  },{
+    path:'/signalDiagnose',
+    name:'SignalDiagnose',
+    component:()=>import('../views/api/signalDiagnose')
   }
 ]
 

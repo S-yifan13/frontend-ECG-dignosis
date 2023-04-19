@@ -1,12 +1,26 @@
 <template>
   <div id="topGuide">
     <el-row>
-      <el-col :span="16" v-if="$store.state.user.type == 'doctor'"><img :src="require('../assets/images/logo3.png')" class="topGuideImage"></el-col>
-      <el-col :span="16" v-else><img :src="require('../assets/images/logo3.png')" class="topGuideImage"></el-col>
+      <el-col :span="10" v-if="$store.state.user.type"><img :src="require('../assets/images/logo3.png')" class="topGuideImage"></el-col>
+      <el-col :span="14" v-else><img :src="require('../assets/images/logo3.png')" class="topGuideImage"></el-col>
       <el-col :span="2">
         <div class="guide">
           <el-button type="text" style="font-size: 16px;" @click="()=>{$router.push('/')}">
             首页
+          </el-button>
+        </div>
+      </el-col>
+      <el-col :span="3">
+        <div class="guide">
+          <el-button type="text" style="font-size: 16px;" @click="()=>{$router.push('/signalDiagnose')}">
+            心电信号诊断
+          </el-button>
+        </div>
+      </el-col>
+      <el-col :span="3">
+        <div class="guide">
+          <el-button type="text" style="font-size: 16px;" @click="()=>{$router.push('/imageDiagnose')}">
+            心电图诊断
           </el-button>
         </div>
       </el-col>
@@ -17,7 +31,7 @@
           </el-button>
         </div>
       </el-col>
-      <el-col :span="2" v-else-if="$store.state.user.type == 'doctor'">
+      <el-col :span="2" v-if="$store.state.user.type == 'doctor'">
         <div class="guide">
           <el-button type="text" style="font-size: 16px;" @click="()=>{$router.push('/diagnose')}">
             诊断
@@ -31,7 +45,7 @@
           </el-button>
         </div>
       </el-col>
-      <el-col :span="2" v-else-if="$store.state.user.type == 'doctor'">
+      <el-col :span="2" v-if="$store.state.user.type == 'doctor'">
         <div class="guide">
           <el-button type="text"  @click="()=>{$router.push('/history')}" style="font-size: 16px;">
             历史记录
